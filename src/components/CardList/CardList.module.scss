@@ -1,0 +1,19 @@
+.cards-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.cards {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    & + & {
+      margin-top: 26px;
+    }
+  }
+}
