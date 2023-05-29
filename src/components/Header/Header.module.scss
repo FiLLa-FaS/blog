@@ -11,10 +11,37 @@
     font-size: 18px;
     line-height: 28px;
     color: rgba(0, 0, 0, 0.85);
+    margin: 0;
+  }
+
+  &__link {
+    color: rgba(0, 0, 0, 0.85);
+    text-decoration: none;
+    display: flex;
   }
 
   &__buttons {
     display: flex;
     gap: 20px;
+  }
+
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  &__username {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(0, 0, 0, 0.85);
+    margin: 0;
   }
 }

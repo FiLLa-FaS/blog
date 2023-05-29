@@ -1,8 +1,11 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { format, parseISO } from 'date-fns'
 
 import { getFullArticle } from '../../store/articlesSlice'
+import Image from '../Image'
+import userIcon from '../../assets/Final-Avatar.png'
 
 import classes from './Card.module.scss'
 
@@ -12,6 +15,13 @@ function Card({ article }) {
 
   const handleClick = (slug) => {
     dispatch(getFullArticle(slug))
+  }
+
+  function formatDate(releaseD) {
+    if (releaseD && releaseD !== '') {
+      return format(parseISO(releaseD), 'MMMM d, y')
+    }
+    return false
   }
 
   return (
@@ -46,11 +56,9 @@ function Card({ article }) {
       <div className={classes.card__user}>
         <div className={classes['card__user-info']}>
           <h3 className={classes['card__user-name']}>{article.author.username}</h3>
-          <time dateTime="20-05-2020" className={classes['card__user-date']}>
-            {article.author.createdAt}
-          </time>
+          <time className={classes['card__user-date']}>{formatDate(article.createdAt)}</time>
         </div>
-        <img src={article.author.image} alt="user" className={classes['card__user-picture']} />
+        <Image url={article.author.image} placeholder={userIcon} />
       </div>
     </article>
   )

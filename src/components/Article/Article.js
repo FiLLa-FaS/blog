@@ -1,14 +1,35 @@
 import React from 'react'
 import Markdown from 'markdown-to-jsx'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { format, parseISO } from 'date-fns'
+import { Popconfirm } from 'antd'
 
-import { articlesFullArticle } from '../../store/selectors'
+import Image from '../Image'
+import { articlesFullArticle, authorizationToken, authorizationUser } from '../../store/selectors'
+import { deleteArticle } from '../../store/articlesSlice'
+import userIcon from '../../assets/Final-Avatar.png'
 
 import classes from './Article.module.scss'
 
 function Article({ classElement }) {
   const article = useSelector(articlesFullArticle)
+  const currentUser = useSelector(authorizationUser)
+  const currentToken = useSelector(authorizationToken)
+  const dispatch = useDispatch()
+
+  function formatDate(releaseD) {
+    if (releaseD && releaseD !== '') {
+      return format(parseISO(releaseD), 'MMMM d, y')
+    }
+    return false
+  }
+
+  const onArticleDelete = () => {
+    const articleInfo = deleteArticle({ slug: article.slug, token: currentToken })
+    dispatch(articleInfo)
+    // TODO: статья удалилась, но в редаксе все rejected
+  }
 
   return (
     <>
@@ -36,11 +57,32 @@ function Article({ classElement }) {
             <div className={classes['card-full__user']}>
               <div className={classes['card-full__user-info']}>
                 <h3 className={classes['card-full__user-name']}>{article.author.username}</h3>
-                <time dateTime="20-05-2020" className={classes['card-full__user-date']}>
-                  {article.author.createdAt}
+                <time dateTime={article.createdAt} className={classes['card-full__user-date']}>
+                  {formatDate(article.createdAt)}
                 </time>
               </div>
-              <img src={article.author.image} alt="user" className={classes['card-full__user-picture']} />
+              <Image url={article.author.image} placeholder={userIcon} />
+              {currentUser?.user?.username && currentUser.user.username === article.author.username && (
+                <>
+                  <Popconfirm
+                    title="Delete the task"
+                    description="Are you sure to delete this task?"
+                    onConfirm={() => onArticleDelete()}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <button type="button" className={classes['card-full__button-delete']}>
+                      Delete
+                    </button>
+                  </Popconfirm>
+
+                  <Link to={`/articles/${article.slug}/edit`}>
+                    <button type="button" className={classes['card-full__button-edit']}>
+                      Edit
+                    </button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           <div className={classes['card-full__markdown']}>

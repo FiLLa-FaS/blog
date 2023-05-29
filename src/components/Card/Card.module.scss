@@ -71,9 +71,13 @@
     padding: 0;
     display: flex;
     gap: 10px;
+    max-width: 500px;
+    overflow: hidden;
+    flex-wrap: wrap;
   }
 
   &__tag {
+    min-width: 10px;
     display: block;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
@@ -98,6 +102,10 @@
     line-height: 22px;
     color: rgba(0, 0, 0, 0.75);
     overflow-wrap: anywhere;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__user {
@@ -110,6 +118,7 @@
   &__user-info {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
   }
 
   &__user-name {
@@ -127,13 +136,5 @@
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
     margin: 0;
-  }
-
-  &__user-picture {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
   }
 }

@@ -5,6 +5,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   line-height: 28px;
+  padding: 5px 10px;
   cursor: pointer;
   transition: opacity 0.2s linear;
 
@@ -22,5 +23,10 @@
 
   &--size--large {
     padding: 10px 20px;
+  }
+
+  &--size--small {
+    font-size: 14px;
+    line-height: 22px;
   }
 }

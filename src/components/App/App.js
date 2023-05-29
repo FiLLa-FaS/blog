@@ -3,10 +3,14 @@ import { Routes, Route, Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { fetchArticles } from '../../store/articlesSlice'
+import { getUserData } from '../../store/authorizationSlice'
 import { articlesCurrentPage } from '../../store/selectors'
 import CardList from '../CardList'
 import Article from '../Article'
+import ArticleFormLayout from '../ArticleFormLayout'
 import Layout from '../Layout'
+import Popup from '../Popup/Popup'
+import PrivateRoute from '../PrivateRoute'
 
 import classes from './App.module.scss'
 
@@ -18,6 +22,10 @@ function App() {
     dispatch(fetchArticles(currentPage))
   }, [dispatch, currentPage])
 
+  useEffect(() => {
+    dispatch(getUserData(localStorage.getItem('token')))
+  }, [dispatch])
+
   return (
     <Routes>
       <Route path="/" element={<Layout classElement={classes.app} />}>
@@ -25,6 +33,14 @@ function App() {
         <Route index element={<CardList classElement={classes.app__cards} />} />
         <Route path="articles" element={<CardList classElement={classes.app__cards} />} />
         <Route path="articles/:slug" element={<Article classElement={classes.app__cards} />} />
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path="articles/:slug/edit" element={<ArticleFormLayout classElement={classes.app__cards} edit />} />
+          <Route path="profile" element={<Popup edit />} />
+          <Route path="new-article" element={<ArticleFormLayout classElement={classes.app__cards} create />} />
+        </Route>
+        <Route path="sign-in" element={<Popup signIn />} />
+        <Route path="sign-up" element={<Popup signUp />} />
+
         <Route
           path="*"
           element={
@@ -39,3 +55,11 @@ function App() {
 }
 
 export default App
+
+// TODO: proptypes и defaultprops
+// TODO: вынести отдельно цвета и шрифты в переменные
+// TODO: решить вопрос с the same key в списках
+// TODO: сделать уведомление об успешных/неуспешных действиях для статей и авторизации
+// TODO: не забыть выключить исключения eslint
+// TODO: настроить общие кнопки везде (сейчас кусками UiButton, а кусками теги кнопок)
+// TODO: почекать нейминг и возможно поменять (особенно форма для создания/редактирования, разбивка на краткую/полную статью и так далее)

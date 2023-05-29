@@ -2,7 +2,7 @@ import React from 'react'
 
 import classes from './UiButton.module.scss'
 
-function UiButton({ large, borderless, accent, children }) {
+function UiButton({ small, large, borderless, accent, onClickFunction = () => {}, children }) {
   return (
     <button
       type="button"
@@ -10,7 +10,9 @@ function UiButton({ large, borderless, accent, children }) {
       ${classes.button} 
       ${borderless && classes['button--type--borderless']} 
       ${large && classes['button--size--large']}
+      ${small && classes['button--size--small']}
       ${accent && classes['button--type--accent']}`}
+      onClick={() => onClickFunction()}
     >
       {children}
     </button>
