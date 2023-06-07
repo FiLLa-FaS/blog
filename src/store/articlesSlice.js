@@ -1,10 +1,17 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-import { createArticleApi, deleteArticleApi, getArticlesApi, updateArticleApi } from '../services/apiService'
+import {
+  createArticleApi,
+  deleteArticleApi,
+  favoriteArticleApi,
+  getArticlesApi,
+  unfavoriteArticleApi,
+  updateArticleApi,
+} from '../services/apiService'
 
-export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (page) => {
-  const articlesPack = await getArticlesApi(page)
+export const fetchArticles = createAsyncThunk('articles/fetchArticles', async ({ page, token }) => {
+  const articlesPack = await getArticlesApi(page, token)
   return articlesPack
 })
 
@@ -20,6 +27,16 @@ export const updateArticle = createAsyncThunk('authorization/updateArticle', asy
 
 export const deleteArticle = createAsyncThunk('authorization/deleteArticle', async ({ slug, token }) => {
   const articleTemplate = await deleteArticleApi(slug, token)
+  return articleTemplate
+})
+
+export const favoriteArticle = createAsyncThunk('authorization/favoriteArticle', async ({ slug, token }) => {
+  const articleTemplate = await favoriteArticleApi(slug, token)
+  return articleTemplate
+})
+
+export const unfavoriteArticle = createAsyncThunk('authorization/unfavoriteArticle', async ({ slug, token }) => {
+  const articleTemplate = await unfavoriteArticleApi(slug, token)
   return articleTemplate
 })
 
@@ -89,6 +106,48 @@ const articlesSlice = createSlice({
       state.hasError = false
     },
     [deleteArticle.rejected]: (state) => {
+      state.isLoading = false
+      state.hasError = true
+    },
+    [favoriteArticle.pending]: (state) => {
+      state.isLoading = true
+      state.hasError = false
+    },
+    [favoriteArticle.fulfilled]: (state, action) => {
+      state.isLoading = false
+      state.hasError = false
+      if (action.payload.article.slug === state.fullArticle.slug) {
+        state.fullArticle = action.payload.article
+      }
+      state.articles = state.articles.map((article) => {
+        if (action.payload.article.slug === article.slug) {
+          return { ...article, favorited: true, favoritesCount: article.favoritesCount + 1 }
+        }
+        return article
+      })
+    },
+    [favoriteArticle.rejected]: (state) => {
+      state.isLoading = false
+      state.hasError = true
+    },
+    [unfavoriteArticle.pending]: (state) => {
+      state.isLoading = true
+      state.hasError = false
+    },
+    [unfavoriteArticle.fulfilled]: (state, action) => {
+      state.isLoading = false
+      state.hasError = false
+      if (action.payload.article.slug === state.fullArticle.slug) {
+        state.fullArticle = action.payload.article
+      }
+      state.articles = state.articles.map((article) => {
+        if (action.payload.article.slug === article.slug) {
+          return { ...article, favorited: false, favoritesCount: article.favoritesCount - 1 }
+        }
+        return article
+      })
+    },
+    [unfavoriteArticle.rejected]: (state) => {
       state.isLoading = false
       state.hasError = true
     },

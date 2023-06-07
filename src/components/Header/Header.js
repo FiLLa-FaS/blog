@@ -36,7 +36,7 @@ function Header() {
           <Link to="/profile" className={classes.header__link}>
             <div className={classes.header__user}>
               <p className={classes.header__username}>{currentUser.user.username}</p>
-              <Image url={currentUser.user.image} placeholder={userIcon} />
+              <Image url={currentUser.user.image ? currentUser.user.image : ''} placeholder={userIcon} />
             </div>
           </Link>
           <UiButton onClickFunction={onLogOut} large>

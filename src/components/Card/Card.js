@@ -1,9 +1,11 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { notification } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
 
-import { getFullArticle } from '../../store/articlesSlice'
+import { getFullArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
+import { authorizationIsLoggedIn, authorizationToken } from '../../store/selectors'
 import Image from '../Image'
 import userIcon from '../../assets/Final-Avatar.png'
 
@@ -11,10 +13,40 @@ import classes from './Card.module.scss'
 
 function Card({ article }) {
   const dispatch = useDispatch()
+  const isLoggedIn = useSelector(authorizationIsLoggedIn)
   const currentArticleSlug = article.slug
+  const currentToken = useSelector(authorizationToken)
+
+  const [api, contextHolder] = notification.useNotification()
+
+  const openNotification = () => {
+    api.open({
+      message: 'Требуется вторизация',
+      description: 'Для этого действия требуется авторизация на странице',
+      duration: 5,
+    })
+  }
 
   const handleClick = (slug) => {
     dispatch(getFullArticle(slug))
+  }
+
+  const handleLike = (slug) => {
+    if (!isLoggedIn) {
+      openNotification()
+      return false
+    }
+    const data = {
+      slug,
+      token: currentToken,
+    }
+
+    if (article.favorited) {
+      dispatch(unfavoriteArticle(data))
+    } else {
+      dispatch(favoriteArticle(data))
+    }
+    return false
   }
 
   function formatDate(releaseD) {
@@ -26,6 +58,7 @@ function Card({ article }) {
 
   return (
     <article className={classes.card}>
+      {contextHolder}
       <div className={classes.card__column}>
         <div className={classes.card__heading}>
           <h2 className={classes.card__title}>
@@ -39,7 +72,12 @@ function Card({ article }) {
           </h2>
 
           <div className={classes.card__like}>
-            <button type="button" className={classes['card__like-icon']} aria-label="Like button" />
+            <button
+              type="button"
+              className={`${classes['card__like-icon']} ${article.favorited ? classes['card__like-icon--marked'] : ''}`}
+              aria-label="Like button"
+              onClick={() => handleLike(currentArticleSlug)}
+            />
             <p className={classes['card__like-amount']}>{article.favoritesCount}</p>
           </div>
         </div>

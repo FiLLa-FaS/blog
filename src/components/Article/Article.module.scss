@@ -42,13 +42,16 @@
     background-position: center;
     background-repeat: no-repeat;
     border: none;
-    pointer-events: none;
-    // cursor: pointer;
-    // transition: opacity 0.2s linear;
+    cursor: pointer;
+    transition: opacity 0.2s linear;
 
-    // &:hover {
-    //   opacity: 0.5;
-    // }
+    &--marked {
+      background-image: url('../../assets/heart_active.svg');
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
   }
 
   &__like-amount {
@@ -169,5 +172,6 @@
   &__markdown {
     margin: 25px 0 0;
     overflow-wrap: anywhere;
+    overflow-x: hidden;
   }
 }

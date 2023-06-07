@@ -3,11 +3,16 @@ import Markdown from 'markdown-to-jsx'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
-import { Popconfirm } from 'antd'
+import { Popconfirm, notification } from 'antd'
 
 import Image from '../Image'
-import { articlesFullArticle, authorizationToken, authorizationUser } from '../../store/selectors'
-import { deleteArticle } from '../../store/articlesSlice'
+import {
+  articlesFullArticle,
+  authorizationToken,
+  authorizationUser,
+  authorizationIsLoggedIn,
+} from '../../store/selectors'
+import { deleteArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
 import userIcon from '../../assets/Final-Avatar.png'
 
 import classes from './Article.module.scss'
@@ -16,7 +21,18 @@ function Article({ classElement }) {
   const article = useSelector(articlesFullArticle)
   const currentUser = useSelector(authorizationUser)
   const currentToken = useSelector(authorizationToken)
+  const isLoggedIn = useSelector(authorizationIsLoggedIn)
   const dispatch = useDispatch()
+
+  const [api, contextHolder] = notification.useNotification()
+
+  const openNotification = () => {
+    api.open({
+      message: 'Требуется вторизация',
+      description: 'Для этого действия требуется авторизация на странице',
+      duration: 5,
+    })
+  }
 
   function formatDate(releaseD) {
     if (releaseD && releaseD !== '') {
@@ -31,16 +47,42 @@ function Article({ classElement }) {
     // TODO: статья удалилась, но в редаксе все rejected
   }
 
+  const handleLike = (slug) => {
+    if (!isLoggedIn) {
+      openNotification()
+      return false
+    }
+    const data = {
+      slug,
+      token: currentToken,
+    }
+
+    if (article.favorited) {
+      dispatch(unfavoriteArticle(data))
+    } else {
+      dispatch(favoriteArticle(data))
+    }
+    return false
+  }
+
   return (
     <>
       {article.slug && (
         <article className={`${classes['card-full']} ${classElement}`}>
+          {contextHolder}
           <div className={classes['card-full__wrapper']}>
             <div className={classes['card-full__column']}>
               <div className={classes['card-full__heading']}>
                 <h2 className={classes['card-full__title']}>{article.title}</h2>
                 <div className={classes['card-full__like']}>
-                  <button type="button" className={classes['card-full__like-icon']} aria-label="Like button" />
+                  <button
+                    type="button"
+                    className={`${classes['card-full__like-icon']} ${
+                      article.favorited ? classes['card-full__like-icon--marked'] : ''
+                    }`}
+                    aria-label="Like button"
+                    onClick={() => handleLike(article.slug)}
+                  />
                   <p className={classes['card-full__like-amount']}>{article.favoritesCount}</p>
                 </div>
               </div>
