@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { notification } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -21,7 +22,7 @@ function Card({ article }) {
 
   const openNotification = () => {
     api.open({
-      message: 'Требуется вторизация',
+      message: 'Требуется авторизация',
       description: 'Для этого действия требуется авторизация на странице',
       duration: 5,
     })
@@ -100,6 +101,29 @@ function Card({ article }) {
       </div>
     </article>
   )
+}
+
+Card.defaultProps = {
+  article: null,
+}
+
+Card.propTypes = {
+  article: PropTypes.shape({
+    author: PropTypes.shape({
+      following: PropTypes.bool.isRequired,
+      image: PropTypes.string,
+      username: PropTypes.string.isRequired,
+    }),
+    body: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    favorited: PropTypes.bool.isRequired,
+    favoritesCount: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    tagList: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  }),
 }
 
 export default Card

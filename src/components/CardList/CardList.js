@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import BarLoader from 'react-spinners/BarLoader'
 import { v4 as uuidv4 } from 'uuid'
@@ -40,6 +41,14 @@ function CardList({ classElement }) {
   }
 
   return <div className={classes['cards-list']}>{renderArticles()}</div>
+}
+
+CardList.defaultProps = {
+  classElement: '',
+}
+
+CardList.propTypes = {
+  classElement: PropTypes.string,
 }
 
 export default CardList

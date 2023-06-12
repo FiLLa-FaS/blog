@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Markdown from 'markdown-to-jsx'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -139,6 +140,14 @@ function Article({ classElement }) {
       )}
     </>
   )
+}
+
+Article.defaultProps = {
+  classElement: '',
+}
+
+Article.propTypes = {
+  classElement: PropTypes.string,
 }
 
 export default Article

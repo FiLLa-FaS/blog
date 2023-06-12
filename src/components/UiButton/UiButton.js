@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import classes from './UiButton.module.scss'
 
-function UiButton({ small, large, borderless, accent, onClickFunction = () => {}, children }) {
+function UiButton({ small, large, borderless, accent, onClickFunction, children }) {
   return (
     <button
       type="button"
@@ -17,6 +18,22 @@ function UiButton({ small, large, borderless, accent, onClickFunction = () => {}
       {children}
     </button>
   )
+}
+
+UiButton.defaultProps = {
+  small: false,
+  large: false,
+  borderless: false,
+  accent: false,
+  onClickFunction() {},
+}
+
+UiButton.propTypes = {
+  small: PropTypes.bool,
+  large: PropTypes.bool,
+  borderless: PropTypes.bool,
+  accent: PropTypes.bool,
+  onClickFunction: PropTypes.func,
 }
 
 export default UiButton

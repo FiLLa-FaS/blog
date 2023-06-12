@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import classes from './Image.module.scss'
 
@@ -26,6 +27,14 @@ function Image({ url, placeholder }) {
       {hasError && <img className={classes.image} src={placeholder} alt="постер фильма" />}
     </>
   )
+}
+
+Image.defaultProps = {
+  url: '',
+}
+
+Image.propTypes = {
+  url: PropTypes.string,
 }
 
 export default Image

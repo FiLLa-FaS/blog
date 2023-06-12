@@ -32,8 +32,6 @@ function FormSignIn() {
     const registerInfo = await signIn(user)
     await dispatch(registerInfo)
 
-    console.log(currentToken)
-
     localStorage.setItem('token', currentToken)
 
     const userInfo = await getUserData(localStorage.getItem('token'))

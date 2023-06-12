@@ -2,16 +2,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { authorizationToken } from '../../store/selectors'
-import { createNewArticle, updateArticle } from '../../store/articlesSlice'
+import { articlesCurrentPage, authorizationToken } from '../../store/selectors'
+import { fetchArticles, createNewArticle, updateArticle } from '../../store/articlesSlice'
 
 import classes from './ArticleForm.module.scss'
 
 function ArticleForm({ classElement, formData }) {
-  // console.log(formData, 'formData')
   const {
     register,
     control,
@@ -24,6 +24,7 @@ function ArticleForm({ classElement, formData }) {
     control,
   })
 
+  const currentPage = useSelector(articlesCurrentPage)
   const currentToken = useSelector(authorizationToken)
   const dispatch = useDispatch()
 
@@ -43,10 +44,11 @@ function ArticleForm({ classElement, formData }) {
     })
     if (formData) {
       const articleInfo = updateArticle(article)
-      dispatch(articleInfo)
+      dispatch(articleInfo).then(() => dispatch(fetchArticles({ page: currentPage, token: currentToken })))
+      // Апдейт статьи срабатывает с одного клика
     } else {
       const articleInfo = createNewArticle(article)
-      dispatch(articleInfo)
+      dispatch(articleInfo).then(() => dispatch(fetchArticles({ page: currentPage, token: currentToken })))
       // Создание статьи срабатывает с одного клика
     }
   }
@@ -145,6 +147,31 @@ function ArticleForm({ classElement, formData }) {
       </form>
     </div>
   )
+}
+
+ArticleForm.defaultProps = {
+  classElement: '',
+  formData: null,
+}
+
+ArticleForm.propTypes = {
+  classElement: PropTypes.string,
+  formData: PropTypes.shape({
+    author: PropTypes.shape({
+      following: PropTypes.bool.isRequired,
+      image: PropTypes.string,
+      username: PropTypes.string.isRequired,
+    }),
+    body: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    favorited: PropTypes.bool.isRequired,
+    favoritesCount: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    tagList: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  }),
 }
 
 export default ArticleForm

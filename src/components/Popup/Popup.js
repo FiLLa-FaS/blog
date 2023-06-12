@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import FormSignUp from '../FormSignUp'
 import FormSignIn from '../FormSignIn'
@@ -40,6 +41,18 @@ function Popup({ signUp, signIn, edit }) {
       </div>
     </div>
   )
+}
+
+Popup.defaultProps = {
+  signUp: false,
+  signIn: false,
+  edit: false,
+}
+
+Popup.propTypes = {
+  signUp: PropTypes.bool,
+  signIn: PropTypes.bool,
+  edit: PropTypes.bool,
 }
 
 export default Popup

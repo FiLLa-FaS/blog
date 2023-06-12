@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
 import { articlesFullArticle } from '../../store/selectors'
@@ -20,6 +21,18 @@ function ArticleFormLayout({ classElement, create, edit }) {
   }
 
   return <>{renderForm()}</>
+}
+
+ArticleFormLayout.defaultProps = {
+  classElement: '',
+  create: false,
+  edit: false,
+}
+
+ArticleFormLayout.propTypes = {
+  classElement: PropTypes.string,
+  create: PropTypes.bool,
+  edit: PropTypes.bool,
 }
 
 export default ArticleFormLayout
