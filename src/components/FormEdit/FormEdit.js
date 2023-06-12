@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
@@ -40,9 +39,10 @@ function FormEdit() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <fieldset className={classes.form__fieldset}>
-        <label className={classes.form__label}>
+        <label htmlFor="form-edit-username" className={classes.form__label}>
           Username
           <input
+            id="form-edit-username"
             type="text"
             placeholder="Username"
             className={`
@@ -60,9 +60,10 @@ function FormEdit() {
           />
         </label>
         {errors.usernameEdit && <span className={classes.form__error}>{errors.usernameEdit.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-edit-email" className={classes.form__label}>
           Email address
           <input
+            id="form-edit-email"
             type="email"
             placeholder="Email address"
             className={`
@@ -78,9 +79,10 @@ function FormEdit() {
           />
         </label>
         {errors.emailEdit && <span className={classes.form__error}>{errors.emailEdit.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-edit-password" className={classes.form__label}>
           New password
           <input
+            id="form-edit-password"
             type="password"
             placeholder="New password"
             className={`
@@ -94,9 +96,10 @@ function FormEdit() {
           />
         </label>
         {errors.passwordEdit && <span className={classes.form__error}>{errors.passwordEdit.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-edit-avatar" className={classes.form__label}>
           Avatar Image (url)
           <input
+            id="form-edit-avatar"
             type="url"
             placeholder="Avatar image"
             className={`

@@ -1,6 +1,5 @@
-/* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useForm, useFieldArray } from 'react-hook-form'
@@ -41,6 +40,7 @@ function ArticleForm({ classElement, formData }) {
     }
     data.tagList.map(({ tag }) => {
       article.article.tagList.push(tag)
+      return false
     })
     if (formData) {
       const articleInfo = updateArticle(article)
@@ -57,25 +57,27 @@ function ArticleForm({ classElement, formData }) {
     <div className={`${classes['article-form']} ${classElement}`}>
       <h2 className={classes['article-form__title']}>{formData ? 'Edit article' : 'Create new article'}</h2>
       <form onSubmit={handleSubmit(onSubmit)} className={classes['article-form__form']}>
-        <label className={classes['article-form__label']}>
+        <label htmlFor="article-form-title" className={classes['article-form__label']}>
           Title
           <input
+            id="article-form-title"
             type="text"
             className={classes['article-form__input']}
             placeholder="title"
             defaultValue={formData ? formData.title : ''}
             {...register('articleTitle', {
               required: 'This field is required',
-              maxLength: { value: 5000, message: 'Your username cannot be longer than 5000 characters' },
+              maxLength: { value: 5000, message: 'Your title cannot be longer than 5000 characters' },
             })}
           />
         </label>
         {errors.articleTitle && (
           <span className={classes['article-form__input-error']}>{errors.articleTitle.message}</span>
         )}
-        <label className={classes['article-form__label']}>
+        <label htmlFor="article-form-description" className={classes['article-form__label']}>
           Short description
           <input
+            id="article-form-description"
             type="text"
             className={classes['article-form__input']}
             placeholder="short description"
@@ -88,9 +90,10 @@ function ArticleForm({ classElement, formData }) {
         {errors.articleDescription && (
           <span className={classes['article-form__input-error']}>{errors.articleDescription.message}</span>
         )}
-        <label className={classes['article-form__label']}>
+        <label htmlFor="article-form-body" className={classes['article-form__label']}>
           Text
           <textarea
+            id="article-form-body"
             type="text"
             className={`${classes['article-form__input']} ${classes['article-form__input--type--textarea']}`}
             placeholder="text"

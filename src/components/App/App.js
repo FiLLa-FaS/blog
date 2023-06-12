@@ -57,7 +57,6 @@ function App() {
 
 export default App
 
-// TODO: proptypes и defaultprops
 // TODO: вынести отдельно цвета и шрифты в переменные
 // TODO: решить вопрос с the same key в списках
 // TODO: сделать уведомление об успешных/неуспешных действиях для статей и авторизации

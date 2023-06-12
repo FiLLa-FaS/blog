@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -54,9 +53,10 @@ function FormSignIn() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <fieldset className={classes.form__fieldset}>
-        <label className={classes.form__label}>
+        <label htmlFor="form-signin-email" className={classes.form__label}>
           Email address
           <input
+            id="form-signin-email"
             type="email"
             placeholder="Email address"
             className={`
@@ -73,9 +73,10 @@ function FormSignIn() {
           />
         </label>
         {errors.emailLogin && <span className={classes.form__error}>{errors.emailLogin.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-signin-password" className={classes.form__label}>
           Password
           <input
+            id="form-signin-password"
             type="password"
             placeholder="Password"
             className={`

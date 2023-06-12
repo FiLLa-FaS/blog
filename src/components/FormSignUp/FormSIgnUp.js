@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -47,9 +46,10 @@ function FormSignUp() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <fieldset className={classes.form__fieldset}>
-        <label className={classes.form__label}>
+        <label htmlFor="form-signup-username" className={classes.form__label}>
           Username
           <input
+            id="form-signup-username"
             type="text"
             placeholder="Username"
             className={`
@@ -68,9 +68,10 @@ function FormSignUp() {
           />
         </label>
         {errors.username && <span className={classes.form__error}>{errors.username.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-signup-email" className={classes.form__label}>
           Email address
           <input
+            id="form-signup-email"
             type="email"
             placeholder="Email address"
             className={`
@@ -87,9 +88,10 @@ function FormSignUp() {
           />
         </label>
         {errors.email && <span className={classes.form__error}>{errors.email.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-signup-password" className={classes.form__label}>
           Password
           <input
+            id="form-signup-password"
             type="password"
             placeholder="Password"
             className={`
@@ -104,9 +106,10 @@ function FormSignUp() {
           />
         </label>
         {errors.password && <span className={classes.form__error}>{errors.password.message}</span>}
-        <label className={classes.form__label}>
+        <label htmlFor="form-signup-password-repeat" className={classes.form__label}>
           Repeat password
           <input
+            id="form-signup-password-repeat"
             type="password"
             placeholder="Repeat password"
             className={`
@@ -122,8 +125,12 @@ function FormSignUp() {
         {errors.passwordConfirm && <span className={classes.form__error}>{errors.passwordConfirm.message}</span>}
       </fieldset>
       <fieldset className={`${classes.form__fieldset} ${classes['form__fieldset--type--agreement']}`}>
-        <label className={`${classes.form__label} ${classes['form__label--type--agreement']}`}>
+        <label
+          htmlFor="form-signup-agreement"
+          className={`${classes.form__label} ${classes['form__label--type--agreement']}`}
+        >
           <input
+            id="form-signup-agreement"
             type="checkbox"
             className={classes.form__checkbox}
             {...register('agreement', {
