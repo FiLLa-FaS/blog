@@ -1,3 +1,5 @@
+@import '../../assets/variables.scss';
+
 .form {
   display: flex;
   flex-direction: column;
@@ -10,7 +12,7 @@
     width: 100%;
 
     &--type--agreement {
-      border-top: 1px solid #e8e8e8;
+      border-top: 1px solid $light;
       padding-top: 8px;
     }
   }
@@ -19,11 +21,11 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-secondary;
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-    color: #262626;
+    color: $prime;
 
     &--type--agreement {
       flex-direction: row;
@@ -39,51 +41,52 @@
     margin-top: 2px;
     padding: 8px 12px;
     box-sizing: border-box;
-    border: 1px solid #d9d9d9;
+    border: 1px solid $grey-light;
     border-radius: 4px;
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-secondary;
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
-    color: rgba(0, 0, 0, 0.75);
+    opacity: 0.75;
+    color: $black;
 
     &--invalid {
-      border: 1px solid #f5222d;
+      border: 1px solid $alert;
 
       &:focus {
-        outline: 1px solid #f5222d;
+        outline: 1px solid $alert;
       }
     }
 
     &::placeholder {
-      font-family: 'Roboto', sans-serif;
+      font-family: $font-secondary;
       font-weight: 400;
       font-size: 16px;
       line-height: 24px;
-      color: #bfbfbf;
+      color: $grey;
     }
   }
 
   &__error {
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-secondary;
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-    color: #f5222d;
+    color: $alert;
   }
 
   &__button {
     width: 100%;
     padding: 8px 12px;
     box-sizing: border-box;
-    background: #1890ff;
+    background: $accent;
     border-radius: 4px;
     border: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-secondary;
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
-    color: #ffffff;
+    color: $white;
     text-align: center;
     cursor: pointer;
     transition: opacity 0.2s linear;
@@ -99,17 +102,17 @@
   }
 
   &__additional {
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-secondary;
     font-weight: 400;
     font-size: 12px;
     line-height: 20px;
     text-align: center;
-    color: #8c8c8c;
+    color: $grey-dark;
     margin: 8px 0 0;
   }
 
   &__switch {
-    color: #1890ff;
+    color: $accent;
     text-decoration: none;
   }
 }

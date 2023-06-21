@@ -20,7 +20,11 @@ function App() {
   const currentToken = useSelector(authorizationToken)
 
   useEffect(() => {
-    dispatch(getUserData(localStorage.getItem('token')))
+    const token = localStorage.getItem('token')
+
+    if (token !== 'null' && token !== null) {
+      dispatch(getUserData(token))
+    }
   }, [dispatch])
 
   useEffect(() => {
@@ -57,14 +61,8 @@ function App() {
 
 export default App
 
-// TODO: вынести отдельно цвета и шрифты в переменные
 // TODO: решить вопрос с the same key в списках
-// TODO: сделать уведомление об успешных/неуспешных действиях для статей и авторизации
-// TODO: не забыть выключить исключения eslint
-// TODO: настроить общие кнопки везде (сейчас кусками UiButton, а кусками теги кнопок)
-// TODO: почекать нейминг и возможно поменять (особенно форма для создания/редактирования, разбивка на краткую/полную статью и так далее)
-// TODO: редирект после отправки форм
-// TODO: дисейблить кнопку после отправки форм
-// TODO: лайки не меняются, если поставить их в полной статье, а потом вернуться в список карточек
+// TODO: серверные ошибки форм обрабатываются только после второго клика на кнопку
 
-// adamsmasher, fillafastest@gmail.com, 12345678
+// zelda, fillafastest@gmail.com, 12345678
+// link, testuser@gmail.com, 12345678

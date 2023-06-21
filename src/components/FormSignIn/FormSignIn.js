@@ -1,18 +1,27 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getUserData, signIn } from '../../store/authorizationSlice'
-import { authorizationErrors, authorizationToken } from '../../store/selectors'
+import {
+  authorizationErrors,
+  authorizationToken,
+  authorizationStatus,
+  authorizationHasError,
+} from '../../store/selectors'
+import UiButton from '../UiButton'
 
 import classes from './FormSignIn.module.scss'
 
 function FormSignIn() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const signInErrors = useSelector(authorizationErrors)
   const currentToken = useSelector(authorizationToken)
+  const currentStatus = useSelector(authorizationStatus)
+  const hasError = useSelector(authorizationHasError)
 
   const {
     register,
@@ -28,14 +37,15 @@ function FormSignIn() {
         password: data.passwordLogin,
       },
     }
-    const registerInfo = await signIn(user)
-    await dispatch(registerInfo)
-
+    const registerInfo = signIn(user)
+    dispatch(registerInfo)
     localStorage.setItem('token', currentToken)
-
-    const userInfo = await getUserData(localStorage.getItem('token'))
-
-    await dispatch(userInfo)
+    const userInfo = getUserData(localStorage.getItem('token'))
+    dispatch(userInfo).then((result) => {
+      if (currentStatus === 'finished' && !hasError && !result.error) {
+        navigate('/')
+      }
+    })
 
     if (Object.keys(signInErrors).length !== 0) {
       const entries = Object.entries(signInErrors)
@@ -91,9 +101,9 @@ function FormSignIn() {
         {errors.passwordLogin && <span className={classes.form__error}>{errors.passwordLogin.message}</span>}
       </fieldset>
       <fieldset className={classes.form__fieldset}>
-        <button type="submit" className={classes.form__button}>
+        <UiButton classElement={classes.form__button} submit disabled={currentStatus === 'loading'}>
           Login
-        </button>
+        </UiButton>
         <p className={classes.form__additional}>
           Don&#39;t have an account?&ensp;
           <Link to="/sign-up" className={classes.form__switch}>

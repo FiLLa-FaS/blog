@@ -6,7 +6,7 @@ import UiButton from '../UiButton'
 import Image from '../Image'
 import { authorizationUser } from '../../store/selectors'
 import { logOut } from '../../store/authorizationSlice'
-import userIcon from '../../assets/Final-Avatar.png'
+import userIcon from '../../assets/images/Final-Avatar.png'
 
 import classes from './Header.module.scss'
 

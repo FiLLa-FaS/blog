@@ -3,15 +3,32 @@ import PropTypes from 'prop-types'
 
 import classes from './UiButton.module.scss'
 
-function UiButton({ small, large, borderless, accent, onClickFunction, children }) {
+function UiButton({
+  classElement,
+  disabled,
+  small,
+  large,
+  borderless,
+  accent,
+  submit,
+  prime,
+  alert,
+  onClickFunction,
+  children,
+}) {
   return (
     <button
-      type="button"
+      type={submit ? 'submit' : 'button'}
+      disabled={disabled}
       className={`
+      ${classElement}
       ${classes.button} 
       ${borderless && classes['button--type--borderless']} 
       ${large && classes['button--size--large']}
       ${small && classes['button--size--small']}
+      ${submit && classes['button--type--submit']}
+      ${prime && classes['button--type--prime']}
+      ${alert && classes['button--type--alert']}
       ${accent && classes['button--type--accent']}`}
       onClick={() => onClickFunction()}
     >

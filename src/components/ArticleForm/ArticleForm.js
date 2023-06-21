@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { articlesCurrentPage, authorizationToken } from '../../store/selectors'
+import { articlesCurrentPage, authorizationToken, articlesIsLoading } from '../../store/selectors'
 import { fetchArticles, createNewArticle, updateArticle } from '../../store/articlesSlice'
+import UiButton from '../UiButton'
 
 import classes from './ArticleForm.module.scss'
 
@@ -25,7 +27,9 @@ function ArticleForm({ classElement, formData }) {
 
   const currentPage = useSelector(articlesCurrentPage)
   const currentToken = useSelector(authorizationToken)
+  const currentStatus = useSelector(articlesIsLoading)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
     const article = {
@@ -42,15 +46,16 @@ function ArticleForm({ classElement, formData }) {
       article.article.tagList.push(tag)
       return false
     })
+    let articleInfo
     if (formData) {
-      const articleInfo = updateArticle(article)
-      dispatch(articleInfo).then(() => dispatch(fetchArticles({ page: currentPage, token: currentToken })))
-      // Апдейт статьи срабатывает с одного клика
+      articleInfo = updateArticle(article)
     } else {
-      const articleInfo = createNewArticle(article)
-      dispatch(articleInfo).then(() => dispatch(fetchArticles({ page: currentPage, token: currentToken })))
-      // Создание статьи срабатывает с одного клика
+      articleInfo = createNewArticle(article)
     }
+    dispatch(articleInfo).then(() => {
+      dispatch(fetchArticles({ page: currentPage, token: currentToken }))
+      return navigate('/')
+    })
   }
 
   return (
@@ -119,34 +124,33 @@ function ArticleForm({ classElement, formData }) {
                       className={`${classes['article-form__input']} ${classes['article-form__input--type--tag']}`}
                       {...register(`tagList.${index}.tag`)}
                     />
-                    <button
-                      type="button"
-                      className={`${classes['article-form__button']} ${classes['article-form__button--type--delete']}`}
-                      onClick={() => remove(index)}
+                    <UiButton
+                      classElement={`${classes['article-form__button-add']}`}
+                      alert
+                      onClickFunction={() => {
+                        remove(index)
+                      }}
                     >
                       Delete
-                    </button>
+                    </UiButton>
                   </div>
                 ))}
               </div>
             )}
-            <button
-              type="button"
-              className={`${classes['article-form__button']} ${classes['article-form__button--type--add']}`}
-              onClick={() => {
+            <UiButton
+              classElement={`${classes['article-form__button-add']}`}
+              prime
+              onClickFunction={() => {
                 append({ tag: '' })
               }}
             >
               Add tag
-            </button>
+            </UiButton>
           </div>
         </fieldset>
-        <button
-          type="submit"
-          className={`${classes['article-form__button']} ${classes['article-form__button--type--submit']}`}
-        >
+        <UiButton disabled={currentStatus} classElement={`${classes['article-form__button-submit']}`} submit>
           Send
-        </button>
+        </UiButton>
       </form>
     </div>
   )

@@ -1,17 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { signUp } from '../../store/authorizationSlice'
-import { authorizationErrors } from '../../store/selectors'
+import { authorizationErrors, authorizationStatus, authorizationHasError } from '../../store/selectors'
+import UiButton from '../UiButton'
 
 import classes from './FormSignUp.module.scss'
 
 function FormSignUp() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const signUpErrors = useSelector(authorizationErrors)
+  const currentStatus = useSelector(authorizationStatus)
+  const hasError = useSelector(authorizationHasError)
 
   const {
     register,
@@ -20,6 +24,7 @@ function FormSignUp() {
     setError,
     formState: { errors },
   } = useForm()
+
   const onSubmit = (data) => {
     const user = {
       user: {
@@ -30,7 +35,11 @@ function FormSignUp() {
     }
     const registerInfo = signUp(user)
 
-    dispatch(registerInfo)
+    dispatch(registerInfo).then((result) => {
+      if (currentStatus === 'finished' && !hasError && !result.error) {
+        navigate('/')
+      }
+    })
 
     if (Object.keys(signUpErrors).length !== 0) {
       const entries = Object.entries(signUpErrors)
@@ -142,9 +151,9 @@ function FormSignUp() {
         {errors.agreement && <span className={classes.form__error}>{errors.agreement.message}</span>}
       </fieldset>
       <fieldset className={classes.form__fieldset}>
-        <button type="submit" className={classes.form__button}>
+        <UiButton classElement={classes.form__button} submit disabled={currentStatus === 'loading'}>
           Create
-        </button>
+        </UiButton>
         <p className={classes.form__additional}>
           Already have an account?&ensp;
           <Link to="/sign-in" className={classes.form__switch}>
@@ -157,7 +166,3 @@ function FormSignUp() {
 }
 
 export default FormSignUp
-
-// TODO: валидация емейла слишком жесткая
-
-// TODO: серверные ошибки обрабатываются только после второго клика на кнопку

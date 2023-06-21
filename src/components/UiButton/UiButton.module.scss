@@ -1,8 +1,10 @@
+@import '../../assets/variables.scss';
+
 .button {
   background-color: transparent;
-  border: 1px solid black;
+  border: 1px solid $black;
   border-radius: 5px;
-  font-family: 'Inter', sans-serif;
+  font-family: $font-primary;
   font-size: 18px;
   line-height: 28px;
   padding: 5px 10px;
@@ -13,12 +15,35 @@
     opacity: 0.5;
   }
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+
   &--type--borderless {
     border: none;
   }
   &--type--accent {
-    border-color: #52c41a;
-    color: #52c41a;
+    border-color: $additional;
+    color: $additional;
+  }
+
+  &--type--alert {
+    border: 1px solid $alert;
+    color: $alert;
+  }
+
+  &--type--prime {
+    border: 1px solid $accent;
+    color: $accent;
+  }
+
+  &--type--submit {
+    width: 100%;
+    background-color: $accent;
+    color: $white;
+    border: none;
   }
 
   &--size--large {

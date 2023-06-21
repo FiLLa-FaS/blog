@@ -6,14 +6,14 @@ import { v4 as uuidv4 } from 'uuid'
 
 import Card from '../Card'
 import CustomPagination from '../CustomPagination'
-import { articlesArr, articlesError, articlesStatus } from '../../store/selectors'
+import { articlesArr, articlesError, articlesIsLoading } from '../../store/selectors'
 
 import classes from './CardList.module.scss'
 
 function CardList({ classElement }) {
   const articles = useSelector(articlesArr)
   const error = useSelector(articlesError)
-  const status = useSelector(articlesStatus)
+  const status = useSelector(articlesIsLoading)
 
   const renderArticles = () => {
     if (error) {

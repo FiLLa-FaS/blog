@@ -1,20 +1,32 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
 import { editUserData } from '../../store/authorizationSlice'
-import { authorizationUser } from '../../store/selectors'
+import {
+  authorizationUser,
+  authorizationStatus,
+  authorizationHasError,
+  authorizationErrors,
+} from '../../store/selectors'
+import UiButton from '../UiButton'
 
 import classes from './FormEdit.module.scss'
 
 function FormEdit() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const currentUser = useSelector(authorizationUser)
+  const currentStatus = useSelector(authorizationStatus)
+  const hasError = useSelector(authorizationHasError)
+  const editErrors = useSelector(authorizationErrors)
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm()
   const onSubmit = (data) => {
@@ -33,7 +45,22 @@ function FormEdit() {
     }
 
     const editUserInfo = editUserData({ userData: newUser, token: currentUser.user.token })
-    dispatch(editUserInfo)
+    dispatch(editUserInfo).then((result) => {
+      if (currentStatus === 'finished' && !hasError && !result.error) {
+        navigate('/')
+      }
+    })
+
+    if (Object.keys(editErrors).length !== 0) {
+      setError('usernameEdit', {
+        type: 'server',
+        message: 'username or email is already taken',
+      })
+      setError('emailEdit', {
+        type: 'server',
+        message: 'username or email is already taken',
+      })
+    }
   }
 
   return (
@@ -112,9 +139,9 @@ function FormEdit() {
         {errors.avatarUrlEdit && <span className={classes.form__error}>{errors.avatarUrlEdit.message}</span>}
       </fieldset>
       <fieldset className={classes.form__fieldset}>
-        <button type="submit" className={classes.form__button}>
+        <UiButton classElement={classes.form__button} submit disabled={currentStatus === 'loading'}>
           Save
-        </button>
+        </UiButton>
       </fieldset>
     </form>
   )

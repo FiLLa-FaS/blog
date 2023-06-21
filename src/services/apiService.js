@@ -133,8 +133,10 @@ export async function editUserDataApi(userData, token) {
   })
 
   if (!res.ok) {
-    throw new Error(`Could not update ${API_BASE}user, received ${res.status}`)
+    const errors = await res.json()
+    return errors
   }
+
   const body = await res.json()
   return body
 }

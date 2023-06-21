@@ -106,9 +106,15 @@ const authorizationSlice = createSlice({
       state.errors = {}
     },
     [editUserData.fulfilled]: (state, action) => {
-      state.status = 'finished'
-      state.hasError = false
-      state.user = action.payload
+      if (action.payload.errors) {
+        state.status = 'finished'
+        state.hasError = true
+        state.errors = action.payload.errors
+      } else {
+        state.status = 'finished'
+        state.hasError = false
+        state.user = action.payload
+      }
     },
     [editUserData.rejected]: (state) => {
       state.hasError = true

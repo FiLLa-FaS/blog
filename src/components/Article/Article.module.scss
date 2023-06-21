@@ -1,8 +1,10 @@
+@import '../../assets/variables.scss';
+
 .card-full {
   width: 100%;
   padding: 15px;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: $white;
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
 
   &__wrapper {
@@ -18,11 +20,11 @@
   }
 
   &__title {
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-size: 20px;
     line-height: 28px;
     font-weight: 400;
-    color: #1890ff;
+    color: $accent;
     margin: 0;
     overflow-wrap: anywhere;
   }
@@ -37,7 +39,7 @@
     width: 16px;
     height: 16px;
     background-color: transparent;
-    background-image: url('../../assets/heart.svg');
+    background-image: url('../../assets/icons/heart.svg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -46,7 +48,7 @@
     transition: opacity 0.2s linear;
 
     &--marked {
-      background-image: url('../../assets/heart_active.svg');
+      background-image: url('../../assets/icons/heart_active.svg');
     }
 
     &:hover {
@@ -55,10 +57,11 @@
   }
 
   &__like-amount {
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-size: 12px;
     line-height: 22px;
-    color: rgba(0, 0, 0, 0.75);
+    color: $black;
+    opacity: 0.75;
     margin: 0;
   }
 
@@ -76,11 +79,12 @@
     min-width: 10px;
     display: block;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-weight: 400;
     font-size: 12px;
     line-height: 15px;
-    color: rgba(0, 0, 0, 0.5);
+    color: $black;
+    opacity: 0.5;
     padding: 2px 5px;
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 2px;
@@ -89,10 +93,11 @@
 
   &__text {
     margin: 16px 0 0;
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-size: 12px;
     line-height: 22px;
-    color: rgba(0, 0, 0, 0.75);
+    opacity: 0.75;
+    color: $black;
     overflow-wrap: anywhere;
   }
 
@@ -111,62 +116,49 @@
   }
 
   &__user-name {
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-size: 18px;
     line-height: 28px;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.85);
+    opacity: 0.85;
+    color: $black;
     margin: 0;
   }
 
   &__user-date {
-    font-family: 'Inter', sans-serif;
+    font-family: $font-primary;
     font-size: 12px;
     line-height: 22px;
-    color: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
+    color: $black;
     margin: 0;
   }
 
   &__button-delete {
-    font-family: 'Inter', sans-serif;
+    position: absolute;
+    bottom: -30px;
+    left: -20px;
+    color: $alert;
+    border: 1px solid $alert;
+    border-radius: 5px;
+    padding: 5px 20px;
+    background: transparent;
+    font-family: $font-primary;
+    font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-    color: #f5222d;
-    padding: 6px 17px;
-    box-sizing: border-box;
-    background: transparent;
-    border: 1px solid #f5222d;
-    border-radius: 5px;
-    position: absolute;
-    bottom: -10px;
-    left: -20px;
     cursor: pointer;
     transition: opacity 0.2s linear;
 
     &:hover {
-      opacity: 0.6;
+      opacity: 0.5;
     }
   }
 
   &__button-edit {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 22px;
-    color: #52c41a;
-    padding: 6px 17px;
-    box-sizing: border-box;
-    background: transparent;
-    border: 1px solid #52c41a;
-    border-radius: 5px;
     position: absolute;
-    bottom: -10px;
+    bottom: -30px;
     right: 0;
-    cursor: pointer;
-    transition: opacity 0.2s linear;
-
-    &:hover {
-      opacity: 0.6;
-    }
   }
 
   &__markdown {

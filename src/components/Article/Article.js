@@ -7,6 +7,7 @@ import { format, parseISO } from 'date-fns'
 import { Popconfirm, notification } from 'antd'
 
 import Image from '../Image'
+import UiButton from '../UiButton'
 import {
   articlesFullArticle,
   authorizationToken,
@@ -14,7 +15,7 @@ import {
   authorizationIsLoggedIn,
 } from '../../store/selectors'
 import { deleteArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
-import userIcon from '../../assets/Final-Avatar.png'
+import userIcon from '../../assets/images/Final-Avatar.png'
 
 import classes from './Article.module.scss'
 
@@ -110,7 +111,9 @@ function Article({ classElement }) {
                   <Popconfirm
                     title="Delete the task"
                     description="Are you sure to delete this task?"
-                    onConfirm={() => onArticleDelete()}
+                    onConfirm={() => {
+                      onArticleDelete()
+                    }}
                     okText="Yes"
                     cancelText="No"
                   >
@@ -120,9 +123,9 @@ function Article({ classElement }) {
                   </Popconfirm>
 
                   <Link to={`/articles/${article.slug}/edit`}>
-                    <button type="button" className={classes['card-full__button-edit']}>
+                    <UiButton classElement={classes['card-full__button-edit']} accent small>
                       Edit
-                    </button>
+                    </UiButton>
                   </Link>
                 </>
               )}

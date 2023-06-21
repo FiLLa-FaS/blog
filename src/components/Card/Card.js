@@ -8,7 +8,7 @@ import { format, parseISO } from 'date-fns'
 import { getFullArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
 import { authorizationIsLoggedIn, authorizationToken } from '../../store/selectors'
 import Image from '../Image'
-import userIcon from '../../assets/Final-Avatar.png'
+import userIcon from '../../assets/images/Final-Avatar.png'
 
 import classes from './Card.module.scss'
 
@@ -83,8 +83,8 @@ function Card({ article }) {
           </div>
         </div>
         <ul className={classes.card__tags}>
-          {article.tagList.length !== 0 &&
-            article.tagList.map((tag) => (
+          {article?.tagList?.length !== 0 &&
+            article?.tagList?.map((tag) => (
               <li key={tag} className={classes['card__tag-item']}>
                 <span className={classes.card__tag}>{tag}</span>
               </li>
@@ -114,7 +114,7 @@ Card.propTypes = {
       image: PropTypes.string,
       username: PropTypes.string.isRequired,
     }),
-    body: PropTypes.string.isRequired,
+    body: PropTypes.string,
     createdAt: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     favorited: PropTypes.bool.isRequired,
@@ -122,7 +122,7 @@ Card.propTypes = {
     slug: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
-    tagList: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    tagList: PropTypes.arrayOf(PropTypes.string.isRequired),
   }),
 }
 
