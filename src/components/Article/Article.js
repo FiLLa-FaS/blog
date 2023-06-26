@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Markdown from 'markdown-to-jsx'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
 import { Popconfirm, notification } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
@@ -14,8 +14,9 @@ import {
   authorizationToken,
   authorizationUser,
   authorizationIsLoggedIn,
+  articlesCurrentPage,
 } from '../../store/selectors'
-import { deleteArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
+import { deleteArticle, favoriteArticle, unfavoriteArticle, fetchArticles } from '../../store/articlesSlice'
 import userIcon from '../../assets/images/Final-Avatar.png'
 
 import classes from './Article.module.scss'
@@ -25,7 +26,9 @@ function Article({ classElement }) {
   const currentUser = useSelector(authorizationUser)
   const currentToken = useSelector(authorizationToken)
   const isLoggedIn = useSelector(authorizationIsLoggedIn)
+  const currentPage = useSelector(articlesCurrentPage)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [api, contextHolder] = notification.useNotification()
 
@@ -46,8 +49,10 @@ function Article({ classElement }) {
 
   const onArticleDelete = () => {
     const articleInfo = deleteArticle({ slug: article.slug, token: currentToken })
-    dispatch(articleInfo)
-    // TODO: статья удалилась, но в редаксе все rejected
+    dispatch(articleInfo).then(() => {
+      dispatch(fetchArticles({ page: currentPage, token: currentToken }))
+      return navigate('/')
+    })
   }
 
   const handleLike = (slug) => {

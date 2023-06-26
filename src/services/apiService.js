@@ -50,8 +50,7 @@ export async function deleteArticleApi(slug, token) {
   if (!res.ok) {
     throw new Error(`Could not delete article, received ${res.status}`)
   }
-  const body = await res.json()
-  return body
+  return true
 }
 
 export async function favoriteArticleApi(slug, token) {
