@@ -13,12 +13,20 @@ import UiButton from '../UiButton'
 import classes from './ArticleForm.module.scss'
 
 function ArticleForm({ classElement, formData }) {
+  const createTags = (list) => {
+    const arr = []
+    list.map((item) => {
+      arr.push({ tag: item })
+      return false
+    })
+    return arr
+  }
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({ defaultValues: { tagList: formData ? createTags(formData.tagList) : null } })
 
   const { fields, append, remove } = useFieldArray({
     name: 'tagList',
@@ -182,5 +190,3 @@ ArticleForm.propTypes = {
 }
 
 export default ArticleForm
-
-// TODO: редактирование тегов не работает, поэтому его тут нет

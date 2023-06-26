@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+// import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
@@ -17,11 +17,13 @@ import classes from './FormEdit.module.scss'
 
 function FormEdit() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const currentUser = useSelector(authorizationUser)
   const currentStatus = useSelector(authorizationStatus)
   const hasError = useSelector(authorizationHasError)
   const editErrors = useSelector(authorizationErrors)
+  console.log(hasError)
+  console.log(editErrors)
 
   const {
     register,
@@ -44,13 +46,12 @@ function FormEdit() {
       newUser.username = data.usernameEdit
     }
 
-    const editUserInfo = editUserData({ userData: newUser, token: currentUser.user.token })
-    dispatch(editUserInfo).then((result) => {
-      if (currentStatus === 'finished' && !hasError && !result.error) {
-        navigate('/')
-      }
-    })
+    const editUserObject = { userData: newUser, token: currentUser.user.token }
 
+    dispatch(editUserData(editUserObject))
+  }
+
+  useEffect(() => {
     if (Object.keys(editErrors).length !== 0) {
       setError('usernameEdit', {
         type: 'server',
@@ -61,7 +62,16 @@ function FormEdit() {
         message: 'username or email is already taken',
       })
     }
-  }
+  }, [editErrors, setError])
+
+  // useEffect(() => {
+  //   console.log(hasError)
+  //   console.log(editErrors)
+  //   console.log(currentStatus === 'finished')
+  //   if (!hasError && Object.keys(editErrors).length === 0) {
+  //     navigate('/')
+  //   }
+  // }, [currentStatus, hasError, editErrors, navigate])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>

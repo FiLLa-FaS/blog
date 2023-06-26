@@ -4,6 +4,7 @@ import { notification } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
+import { v4 as uuidv4 } from 'uuid'
 
 import { getFullArticle, favoriteArticle, unfavoriteArticle } from '../../store/articlesSlice'
 import { authorizationIsLoggedIn, authorizationToken } from '../../store/selectors'
@@ -85,7 +86,7 @@ function Card({ article }) {
         <ul className={classes.card__tags}>
           {article?.tagList?.length !== 0 &&
             article?.tagList?.map((tag) => (
-              <li key={tag} className={classes['card__tag-item']}>
+              <li key={uuidv4()} className={classes['card__tag-item']}>
                 <span className={classes.card__tag}>{tag}</span>
               </li>
             ))}
@@ -110,19 +111,19 @@ Card.defaultProps = {
 Card.propTypes = {
   article: PropTypes.shape({
     author: PropTypes.shape({
-      following: PropTypes.bool.isRequired,
+      following: PropTypes.bool,
       image: PropTypes.string,
-      username: PropTypes.string.isRequired,
+      username: PropTypes.string,
     }),
     body: PropTypes.string,
-    createdAt: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    favorited: PropTypes.bool.isRequired,
-    favoritesCount: PropTypes.number.isRequired,
-    slug: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired,
-    tagList: PropTypes.arrayOf(PropTypes.string.isRequired),
+    createdAt: PropTypes.string,
+    description: PropTypes.string,
+    favorited: PropTypes.bool,
+    favoritesCount: PropTypes.number,
+    slug: PropTypes.string,
+    title: PropTypes.string,
+    updatedAt: PropTypes.string,
+    tagList: PropTypes.arrayOf(PropTypes.string),
   }),
 }
 

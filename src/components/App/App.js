@@ -61,7 +61,6 @@ function App() {
 
 export default App
 
-// TODO: решить вопрос с the same key в списках
 // TODO: серверные ошибки форм обрабатываются только после второго клика на кнопку
 
 // zelda, fillafastest@gmail.com, 12345678

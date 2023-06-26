@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import BarLoader from 'react-spinners/BarLoader'
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 
 import Card from '../Card'
 import CustomPagination from '../CustomPagination'
@@ -28,7 +28,7 @@ function CardList({ classElement }) {
           <>
             <ul className={`${classes.cards} ${classElement}`}>
               {articles.map((article) => (
-                <li key={uuidv4()} className={classes.cards__item}>
+                <li key={article.slug} className={classes.cards__item}>
                   <Card article={article} />
                 </li>
               ))}

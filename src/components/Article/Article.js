@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
 import { Popconfirm, notification } from 'antd'
+import { v4 as uuidv4 } from 'uuid'
 
 import Image from '../Image'
 import UiButton from '../UiButton'
@@ -91,7 +92,7 @@ function Article({ classElement }) {
               <ul className={classes['card-full__tags']}>
                 {article.tagList.length !== 0 &&
                   article.tagList.map((tag) => (
-                    <li key={tag} className={classes['card-full__tag-item']}>
+                    <li key={uuidv4()} className={classes['card-full__tag-item']}>
                       <span className={classes['card-full__tag']}>{tag}</span>
                     </li>
                   ))}
