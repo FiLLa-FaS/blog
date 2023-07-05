@@ -106,5 +106,3 @@ function FormSignIn() {
 }
 
 export default FormSignIn
-
-// TODO: useNavigate не работает
