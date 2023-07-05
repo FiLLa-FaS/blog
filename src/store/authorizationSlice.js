@@ -28,7 +28,6 @@ const authorizationSlice = createSlice({
   initialState: {
     user: {},
     isLoggedIn: false,
-    hasError: false,
     status: 'idle',
     errors: {},
     token: null,
@@ -38,88 +37,77 @@ const authorizationSlice = createSlice({
       state.user = {}
       state.isLoggedIn = false
       state.errors = {}
+      state.status = 'idle'
       localStorage.removeItem('token')
     },
   },
-  extraReducers: {
-    [signUp.pending]: (state) => {
-      state.status = 'loading'
-      state.hasError = false
-    },
-    [signUp.fulfilled]: (state, action) => {
-      if (action.payload.errors) {
-        state.status = 'finished'
-        state.hasError = true
-        state.errors = action.payload.errors
-      } else {
-        state.status = 'finished'
-        state.hasError = false
+  extraReducers(builder) {
+    builder
+      .addCase(signUp.pending, (state) => {
+        state.status = 'loading'
         state.errors = {}
-      }
-    },
-    [signUp.rejected]: (state, action) => {
-      state.hasError = true
-      state.status = 'finished'
-      state.errors = action.payload
-    },
-    [signIn.pending]: (state) => {
-      state.status = 'loading'
-      state.hasError = false
-    },
-    [signIn.fulfilled]: (state, action) => {
-      if (action.payload.errors) {
-        state.status = 'finished'
-        state.hasError = true
-        state.errors = action.payload.errors
-      } else {
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        if (action.payload.errors) {
+          state.status = 'rejected'
+          state.errors = action.payload.errors
+        } else {
+          state.status = 'finished'
+          state.errors = {}
+        }
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.status = 'rejected'
+        state.errors = action.payload
+      })
+      .addCase(signIn.pending, (state) => {
+        state.status = 'loading'
+        state.errors = {}
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        if (action.payload.errors) {
+          state.status = 'rejected'
+          state.errors = action.payload.errors
+        } else {
+          state.status = 'finished'
+          state.isLoggedIn = true
+          state.token = action.payload.user.token
+          state.errors = {}
+        }
+      })
+      .addCase(signIn.rejected, (state, action) => {
+        state.status = 'rejected'
+        state.errors = action.payload
+      })
+      .addCase(getUserData.pending, (state) => {
+        state.status = 'loading'
+        state.errors = {}
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
         state.status = 'finished'
         state.isLoggedIn = true
-        state.hasError = false
-        state.token = action.payload.user.token
-        state.errors = {}
-      }
-    },
-    [signIn.rejected]: (state, action) => {
-      state.hasError = true
-      state.status = 'finished'
-      state.errors = action.payload
-    },
-    [getUserData.pending]: (state) => {
-      state.status = 'loading'
-      state.hasError = false
-      state.errors = {}
-    },
-    [getUserData.fulfilled]: (state, action) => {
-      state.status = 'finished'
-      state.isLoggedIn = true
-      state.hasError = false
-      state.user = action.payload
-      state.token = localStorage.getItem('token')
-    },
-    [getUserData.rejected]: (state) => {
-      state.hasError = true
-      state.status = 'finished'
-    },
-    [editUserData.pending]: (state) => {
-      state.status = 'loading'
-      state.hasError = false
-      state.errors = {}
-    },
-    [editUserData.fulfilled]: (state, action) => {
-      if (action.payload.errors) {
-        state.status = 'finished'
-        state.hasError = true
-        state.errors = action.payload.errors
-      } else {
-        state.status = 'finished'
-        state.hasError = false
         state.user = action.payload
-      }
-    },
-    [editUserData.rejected]: (state) => {
-      state.hasError = true
-      state.status = 'finished'
-    },
+        state.token = localStorage.getItem('token')
+      })
+      .addCase(getUserData.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(editUserData.pending, (state) => {
+        state.status = 'loading'
+        state.errors = {}
+      })
+      .addCase(editUserData.fulfilled, (state, action) => {
+        if (action.payload.errors) {
+          state.status = 'rejected'
+          state.errors = action.payload.errors
+        } else {
+          state.status = 'finished'
+          state.user = action.payload
+        }
+      })
+      .addCase(editUserData.rejected, (state) => {
+        state.status = 'rejected'
+      })
   },
 })
 

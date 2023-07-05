@@ -118,7 +118,7 @@ export async function getUserApi(token) {
   })
 
   if (!res.ok) {
-    throw new Error(`Could not fetch ${API_BASE}/user, received ${res.status}`)
+    throw new Error(`Could not fetch ${API_BASE}user, received ${res.status}`)
   }
   const body = await res.json()
   return body

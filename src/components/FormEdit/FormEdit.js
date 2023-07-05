@@ -1,29 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect } from 'react'
-// import { useNavigate } from 'react-router-dom'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
 import { editUserData } from '../../store/authorizationSlice'
-import {
-  authorizationUser,
-  authorizationStatus,
-  authorizationHasError,
-  authorizationErrors,
-} from '../../store/selectors'
+import { authorizationUser, authorizationStatus } from '../../store/selectors'
 import UiButton from '../UiButton'
 
 import classes from './FormEdit.module.scss'
 
 function FormEdit() {
   const dispatch = useDispatch()
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const currentUser = useSelector(authorizationUser)
   const currentStatus = useSelector(authorizationStatus)
-  const hasError = useSelector(authorizationHasError)
-  const editErrors = useSelector(authorizationErrors)
-  console.log(hasError)
-  console.log(editErrors)
 
   const {
     register,
@@ -31,7 +22,7 @@ function FormEdit() {
     setError,
     formState: { errors },
   } = useForm()
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const newUser = {}
     if (data.avatarUrlEdit && data.avatarUrlEdit !== '' && data.avatarUrlEdit !== currentUser.user.image) {
       newUser.image = data.avatarUrlEdit
@@ -48,11 +39,8 @@ function FormEdit() {
 
     const editUserObject = { userData: newUser, token: currentUser.user.token }
 
-    dispatch(editUserData(editUserObject))
-  }
-
-  useEffect(() => {
-    if (Object.keys(editErrors).length !== 0) {
+    const result = await dispatch(editUserData(editUserObject)).unwrap()
+    if (result?.errors) {
       setError('usernameEdit', {
         type: 'server',
         message: 'username or email is already taken',
@@ -61,17 +49,10 @@ function FormEdit() {
         type: 'server',
         message: 'username or email is already taken',
       })
+    } else {
+      navigate('/')
     }
-  }, [editErrors, setError])
-
-  // useEffect(() => {
-  //   console.log(hasError)
-  //   console.log(editErrors)
-  //   console.log(currentStatus === 'finished')
-  //   if (!hasError && Object.keys(editErrors).length === 0) {
-  //     navigate('/')
-  //   }
-  // }, [currentStatus, hasError, editErrors, navigate])
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>

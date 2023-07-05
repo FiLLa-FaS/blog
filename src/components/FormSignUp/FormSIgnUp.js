@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { signUp } from '../../store/authorizationSlice'
-import { authorizationErrors, authorizationStatus, authorizationHasError } from '../../store/selectors'
+import { authorizationStatus } from '../../store/selectors'
 import UiButton from '../UiButton'
 
 import classes from './FormSignUp.module.scss'
@@ -13,9 +13,7 @@ import classes from './FormSignUp.module.scss'
 function FormSignUp() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const signUpErrors = useSelector(authorizationErrors)
   const currentStatus = useSelector(authorizationStatus)
-  const hasError = useSelector(authorizationHasError)
 
   const {
     register,
@@ -25,7 +23,7 @@ function FormSignUp() {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const user = {
       user: {
         username: data.username,
@@ -33,22 +31,21 @@ function FormSignUp() {
         password: data.password,
       },
     }
+
     const registerInfo = signUp(user)
+    const result = await dispatch(registerInfo).unwrap()
 
-    dispatch(registerInfo).then((result) => {
-      if (currentStatus === 'finished' && !hasError && !result.error) {
-        navigate('/')
-      }
-    })
-
-    if (Object.keys(signUpErrors).length !== 0) {
-      const entries = Object.entries(signUpErrors)
+    if (result?.errors) {
+      const entries = Object.entries(result.errors)
       entries.forEach((entry) => {
         setError(entry[0], {
           type: 'server',
           message: entry[1],
         })
       })
+    }
+    if (result?.user) {
+      navigate('/')
     }
   }
 

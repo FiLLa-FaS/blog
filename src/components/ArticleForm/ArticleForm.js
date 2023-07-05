@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { articlesCurrentPage, authorizationToken, articlesIsLoading } from '../../store/selectors'
+import { articlesCurrentPage, authorizationToken, articlesStatus } from '../../store/selectors'
 import { fetchArticles, createNewArticle, updateArticle } from '../../store/articlesSlice'
 import UiButton from '../UiButton'
 
@@ -35,11 +35,11 @@ function ArticleForm({ classElement, formData }) {
 
   const currentPage = useSelector(articlesCurrentPage)
   const currentToken = useSelector(authorizationToken)
-  const currentStatus = useSelector(articlesIsLoading)
+  const currentStatus = useSelector(articlesStatus)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const article = {
       article: {
         title: data.articleTitle,
@@ -60,10 +60,14 @@ function ArticleForm({ classElement, formData }) {
     } else {
       articleInfo = createNewArticle(article)
     }
-    dispatch(articleInfo).then(() => {
-      dispatch(fetchArticles({ page: currentPage, token: currentToken }))
+    try {
+      await dispatch(articleInfo).unwrap()
       return navigate('/')
-    })
+    } catch (error) {
+      return false
+    } finally {
+      await dispatch(fetchArticles({ page: currentPage, token: currentToken })).unwrap()
+    }
   }
 
   return (
@@ -156,7 +160,11 @@ function ArticleForm({ classElement, formData }) {
             </UiButton>
           </div>
         </fieldset>
-        <UiButton disabled={currentStatus} classElement={`${classes['article-form__button-submit']}`} submit>
+        <UiButton
+          disabled={currentStatus === 'loading'}
+          classElement={`${classes['article-form__button-submit']}`}
+          submit
+        >
           Send
         </UiButton>
       </form>

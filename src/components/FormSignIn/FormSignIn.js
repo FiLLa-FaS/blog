@@ -5,23 +5,15 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getUserData, signIn } from '../../store/authorizationSlice'
-import {
-  authorizationErrors,
-  authorizationToken,
-  authorizationStatus,
-  authorizationHasError,
-} from '../../store/selectors'
+import { authorizationStatus } from '../../store/selectors'
 import UiButton from '../UiButton'
 
 import classes from './FormSignIn.module.scss'
 
 function FormSignIn() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const signInErrors = useSelector(authorizationErrors)
-  const currentToken = useSelector(authorizationToken)
   const currentStatus = useSelector(authorizationStatus)
-  const hasError = useSelector(authorizationHasError)
+  const navigate = useNavigate()
 
   const {
     register,
@@ -37,18 +29,9 @@ function FormSignIn() {
         password: data.passwordLogin,
       },
     }
-    const registerInfo = signIn(user)
-    dispatch(registerInfo)
-    localStorage.setItem('token', currentToken)
-    const userInfo = getUserData(localStorage.getItem('token'))
-    dispatch(userInfo).then((result) => {
-      if (currentStatus === 'finished' && !hasError && !result.error) {
-        navigate('/')
-      }
-    })
-
-    if (Object.keys(signInErrors).length !== 0) {
-      const entries = Object.entries(signInErrors)
+    const result = await dispatch(signIn(user)).unwrap()
+    if (result?.errors) {
+      const entries = Object.entries(result.errors)
       setError('emailLogin', {
         type: 'server',
         message: entries[0][1],
@@ -57,6 +40,13 @@ function FormSignIn() {
         type: 'server',
         message: entries[0][1],
       })
+    }
+    if (result?.user?.token) {
+      localStorage.setItem('token', result.user.token)
+      const response = await dispatch(getUserData(localStorage.getItem('token'))).unwrap()
+      if (response?.user) {
+        navigate('/')
+      }
     }
   }
 
@@ -116,3 +106,5 @@ function FormSignIn() {
 }
 
 export default FormSignIn
+
+// TODO: useNavigate не работает

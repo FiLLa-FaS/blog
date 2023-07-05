@@ -6,22 +6,21 @@ import BarLoader from 'react-spinners/BarLoader'
 
 import Card from '../Card'
 import CustomPagination from '../CustomPagination'
-import { articlesArr, articlesError, articlesIsLoading } from '../../store/selectors'
+import { articlesArr, articlesStatus } from '../../store/selectors'
 
 import classes from './CardList.module.scss'
 
 function CardList({ classElement }) {
   const articles = useSelector(articlesArr)
-  const error = useSelector(articlesError)
-  const status = useSelector(articlesIsLoading)
+  const status = useSelector(articlesStatus)
 
   const renderArticles = () => {
-    if (error) {
+    if (status === 'rejected' && articles.length === 0) {
       return <p>Что-то пошло не так</p>
     }
     return (
       <>
-        {status && !error && (
+        {status === 'loading' && (
           <BarLoader width="100%" color="#2196f3" cssOverride={{ position: 'absolute', top: '0' }} />
         )}
         {articles && (

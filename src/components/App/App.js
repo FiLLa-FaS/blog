@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchArticles({ page: currentPage, token: currentToken }))
-  }, [dispatch, currentPage, currentToken])
+  }, [currentPage, currentToken, dispatch])
 
   return (
     <Routes>
@@ -60,8 +60,3 @@ function App() {
 }
 
 export default App
-
-// TODO: серверные ошибки форм обрабатываются только после второго клика на кнопку
-
-// zelda, fillafastest@gmail.com, 12345678
-// link, testuser@gmail.com, 12345678

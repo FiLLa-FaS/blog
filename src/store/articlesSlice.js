@@ -47,8 +47,7 @@ const articlesSlice = createSlice({
     articlesCount: null,
     fullArticle: {},
     page: 1,
-    isLoading: false,
-    hasError: false,
+    status: 'idle',
   },
   reducers: {
     setPage(state, action) {
@@ -59,98 +58,82 @@ const articlesSlice = createSlice({
       state.fullArticle = currentArticle
     },
   },
-  extraReducers: {
-    [fetchArticles.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [fetchArticles.fulfilled]: (state, action) => {
-      state.isLoading = false
-      state.articles = action.payload.articles
-      state.articlesCount = action.payload.articlesCount
-    },
-    [fetchArticles.rejected]: (state) => {
-      state.hasError = true
-      state.isLoading = false
-    },
-    [createNewArticle.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [createNewArticle.fulfilled]: (state) => {
-      state.isLoading = false
-      state.hasError = false
-    },
-    [createNewArticle.rejected]: (state) => {
-      state.isLoading = false
-      state.hasError = true
-    },
-    [updateArticle.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [updateArticle.fulfilled]: (state) => {
-      state.isLoading = false
-      state.hasError = false
-    },
-    [updateArticle.rejected]: (state) => {
-      state.isLoading = false
-      state.hasError = true
-    },
-    [deleteArticle.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [deleteArticle.fulfilled]: (state) => {
-      state.isLoading = false
-      state.hasError = false
-    },
-    [deleteArticle.rejected]: (state) => {
-      state.isLoading = false
-      state.hasError = true
-    },
-    [favoriteArticle.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [favoriteArticle.fulfilled]: (state, action) => {
-      state.isLoading = false
-      state.hasError = false
-      if (action.payload.article.slug === state.fullArticle.slug) {
-        state.fullArticle = action.payload.article
-      }
-      state.articles = state.articles.map((article) => {
-        if (action.payload.article.slug === article.slug) {
-          return { ...article, favorited: true, favoritesCount: article.favoritesCount + 1 }
-        }
-        return article
+  extraReducers(builder) {
+    builder
+      .addCase(fetchArticles.pending, (state) => {
+        state.status = 'loading'
       })
-    },
-    [favoriteArticle.rejected]: (state) => {
-      state.isLoading = false
-      state.hasError = true
-    },
-    [unfavoriteArticle.pending]: (state) => {
-      state.isLoading = true
-      state.hasError = false
-    },
-    [unfavoriteArticle.fulfilled]: (state, action) => {
-      state.isLoading = false
-      state.hasError = false
-      if (action.payload.article.slug === state.fullArticle.slug) {
-        state.fullArticle = action.payload.article
-      }
-      state.articles = state.articles.map((article) => {
-        if (action.payload.article.slug === article.slug) {
-          return { ...article, favorited: false, favoritesCount: article.favoritesCount - 1 }
-        }
-        return article
+      .addCase(fetchArticles.fulfilled, (state, action) => {
+        state.status = 'finished'
+        state.articles = action.payload.articles
+        state.articlesCount = action.payload.articlesCount
       })
-    },
-    [unfavoriteArticle.rejected]: (state) => {
-      state.isLoading = false
-      state.hasError = true
-    },
+      .addCase(fetchArticles.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(createNewArticle.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(createNewArticle.fulfilled, (state) => {
+        state.status = 'finished'
+      })
+      .addCase(createNewArticle.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(updateArticle.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(updateArticle.fulfilled, (state) => {
+        state.status = 'finished'
+      })
+      .addCase(updateArticle.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(deleteArticle.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(deleteArticle.fulfilled, (state) => {
+        state.status = 'finished'
+      })
+      .addCase(deleteArticle.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(favoriteArticle.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(favoriteArticle.fulfilled, (state, action) => {
+        state.status = 'finished'
+        if (action.payload.article.slug === state.fullArticle.slug) {
+          state.fullArticle = action.payload.article
+        }
+        state.articles = state.articles.map((article) => {
+          if (action.payload.article.slug === article.slug) {
+            return { ...article, favorited: true, favoritesCount: article.favoritesCount + 1 }
+          }
+          return article
+        })
+      })
+      .addCase(favoriteArticle.rejected, (state) => {
+        state.status = 'rejected'
+      })
+      .addCase(unfavoriteArticle.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(unfavoriteArticle.fulfilled, (state, action) => {
+        state.status = 'finished'
+        if (action.payload.article.slug === state.fullArticle.slug) {
+          state.fullArticle = action.payload.article
+        }
+        state.articles = state.articles.map((article) => {
+          if (action.payload.article.slug === article.slug) {
+            return { ...article, favorited: false, favoritesCount: article.favoritesCount - 1 }
+          }
+          return article
+        })
+      })
+      .addCase(unfavoriteArticle.rejected, (state) => {
+        state.status = 'rejected'
+      })
   },
 })
 

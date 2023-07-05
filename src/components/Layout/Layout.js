@@ -4,12 +4,12 @@ import { Outlet } from 'react-router-dom'
 import { notification } from 'antd'
 import { useSelector } from 'react-redux'
 
-import { articlesError, authorizationHasError } from '../../store/selectors'
+import { articlesStatus, authorizationStatus } from '../../store/selectors'
 import Header from '../Header'
 
 function Layout({ classElement }) {
-  const errorArticles = useSelector(articlesError)
-  const errorAuthorization = useSelector(authorizationHasError)
+  const articleStatus = useSelector(articlesStatus)
+  const authStatus = useSelector(authorizationStatus)
   const [api, contextHolder] = notification.useNotification()
 
   useEffect(() => {
@@ -21,10 +21,10 @@ function Layout({ classElement }) {
       })
     }
 
-    if (errorArticles || errorAuthorization) {
+    if (articleStatus === 'rejected' || authStatus === 'rejected') {
       openNotification()
     }
-  }, [errorArticles, errorAuthorization, api])
+  }, [articleStatus, authStatus, api])
 
   return (
     <div className={classElement}>
